@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karapinha.api", "Karapinha.api\Karapinha.api.csproj", "{F04586B7-37B9-44CC-B304-3903B1BB9C89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karapinha.Model", "Karapinha.Model\Karapinha.Model.csproj", "{F875DB8A-F23F-4443-A623-0689CEB3FEC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karapinha.DTO", "Karapinha.DTO\Karapinha.DTO.csproj", "{D5C4BD2F-EE3F-41D4-96B3-C6440EAA12A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karapinha.DAL", "Karapinha.DAL\Karapinha.DAL.csproj", "{381B4F64-0886-49C2-978C-66C86FBC2548}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karapinha.Shared", "Karapinha.Shared\Karapinha.Shared.csproj", "{B92CEEA6-07DD-4265-ACF5-E2B714AE38C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Karapinha.Services", "Karapinha.Services\Karapinha.Services.csproj", "{45DAE790-B1EA-424F-AB03-CE8081FD2134}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F04586B7-37B9-44CC-B304-3903B1BB9C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04586B7-37B9-44CC-B304-3903B1BB9C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04586B7-37B9-44CC-B304-3903B1BB9C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04586B7-37B9-44CC-B304-3903B1BB9C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F875DB8A-F23F-4443-A623-0689CEB3FEC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F875DB8A-F23F-4443-A623-0689CEB3FEC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F875DB8A-F23F-4443-A623-0689CEB3FEC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F875DB8A-F23F-4443-A623-0689CEB3FEC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5C4BD2F-EE3F-41D4-96B3-C6440EAA12A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5C4BD2F-EE3F-41D4-96B3-C6440EAA12A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5C4BD2F-EE3F-41D4-96B3-C6440EAA12A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5C4BD2F-EE3F-41D4-96B3-C6440EAA12A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381B4F64-0886-49C2-978C-66C86FBC2548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381B4F64-0886-49C2-978C-66C86FBC2548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381B4F64-0886-49C2-978C-66C86FBC2548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381B4F64-0886-49C2-978C-66C86FBC2548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B92CEEA6-07DD-4265-ACF5-E2B714AE38C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B92CEEA6-07DD-4265-ACF5-E2B714AE38C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B92CEEA6-07DD-4265-ACF5-E2B714AE38C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B92CEEA6-07DD-4265-ACF5-E2B714AE38C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45DAE790-B1EA-424F-AB03-CE8081FD2134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45DAE790-B1EA-424F-AB03-CE8081FD2134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45DAE790-B1EA-424F-AB03-CE8081FD2134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45DAE790-B1EA-424F-AB03-CE8081FD2134}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA0260B0-F175-4F64-94CA-C670BAEB7166}
+	EndGlobalSection
+EndGlobal

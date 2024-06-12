@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Karapinha.DAL\Karapinha.DAL.csproj" />
+    <ProjectReference Include="..\Karapinha.DTO\Karapinha.DTO.csproj" />
+    <ProjectReference Include="..\Karapinha.Model\Karapinha.Model.csproj" />
+    <ProjectReference Include="..\Karapinha.Shared\Karapinha.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
