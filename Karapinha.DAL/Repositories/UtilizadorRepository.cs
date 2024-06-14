@@ -22,8 +22,5 @@ namespace Karapinha.DAL.Repositories
             return await _karapinhaContext.Utilizadores.FirstOrDefaultAsync(u => u.UserName == username);
         }
 
-
-
-
     }
 }

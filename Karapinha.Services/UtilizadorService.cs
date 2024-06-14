@@ -172,7 +172,6 @@ namespace Karapinha.Services
 
             return user;
         }
-
         public async Task<Utilizador> MostrarPorUsername(string username)
         {
             return await _utilizadorRepository.MostrarPorUsername(username);
