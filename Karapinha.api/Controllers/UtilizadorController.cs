@@ -50,9 +50,9 @@ namespace Karapinha.api.Controllers
         }
 
         [HttpPut("AtivarConta/{id}")]
-        public async Task<ActionResult> AtivarConta(int id)
+        public async Task<ActionResult> AtivarUtilizador(int id)
         {
-            return Ok(await _utilizadorService.AtivarConta(id));
+            return Ok(await _utilizadorService.AtivarUtilizador(id));
         }
 
         

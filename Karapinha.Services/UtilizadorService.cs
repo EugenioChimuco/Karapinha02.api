@@ -3,6 +3,7 @@ using Karapinha.Model;
 using Karapinha.Shared.IRepository;
 using Karapinha.Shared.IService;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Karapinha.Services
         {
             _utilizadorRepository = utilizadorRepository;
             _emailService = emailService;
-            _adminEmail = "chimuco008@gmail.com"; // Substitua pelo email real do administrador
+            _adminEmail = "chimuco007@gmail.com"; // Substitua pelo email real do administrador
         }
 
         public async Task<bool> AdicionarUtilizador(UtilizadorAdicionarDTO utilizadorAdicionarDTO)
@@ -45,7 +46,15 @@ namespace Karapinha.Services
             await _utilizadorRepository.Atualizar(utilizador);
 
             // Enviar email de boas-vindas ao utilizador
-            await EnviarEmail(utilizador.Email, "Bem-vindo ao Karapinha", "Obrigado por se registrar!");
+            if (utilizador.TipoDeUser == 2) {
+                string subject = "Criação de conta Administrativo";
+                string body = "Bem-vindo ao Karapinha" +
+                                "Foi registrado como Administrador."+
+                                "Os seus dados de acesso são:"+
+                                $"Username :{utilizador.UserName}\n" +
+                                $"Senha    :{utilizador.Password}";
+                await _emailService.SendEmailAsync(utilizador.Email,subject,body);       
+            }
 
             // Enviar email ao administrador
             await EnviarEmailParaAdministrador(utilizador);
@@ -63,14 +72,15 @@ namespace Karapinha.Services
             return await _utilizadorRepository.Apagar(utilizador);
         }
 
-        public async Task<bool> AtivarConta(int id)
+        public async Task<bool> AtivarUtilizador(int id)
         {
             var utilizador = await _utilizadorRepository.MostrarPorId(id);
             if (utilizador == null)
             {
                 return false;
             }
-            utilizador.EstadoDaConta = true;
+            utilizador.EstadoDoUtilizador = true;
+            await _emailService.SendEmailAsync(utilizador.Email, "Activação de conta", "A sua conta está activa");
             return await _utilizadorRepository.Atualizar(utilizador);
         }
 
@@ -103,8 +113,21 @@ namespace Karapinha.Services
             {
                 return false;
             }
-            utilizador.EstadoDoUtilizador = !utilizador.EstadoDoUtilizador;
+            utilizador.EstadoDaConta = !utilizador.EstadoDaConta;
+            string subject = "Conta Bloqueada";
+            string locked = "A sua conta foi bloqueada...";
+            string unlock = "A sua conta foi desbloqueada...";
+            if (utilizador.EstadoDaConta)
+            {
+              await  _emailService.SendEmailAsync(utilizador.Email, subject,locked);
+            }
+            else
+            {
+              await  _emailService.SendEmailAsync(utilizador.Email, subject, unlock);
+            }
+             
             return await _utilizadorRepository.Atualizar(utilizador);
+           
         }
 
         public async Task<List<Utilizador>> ListarTodosUsuarios()

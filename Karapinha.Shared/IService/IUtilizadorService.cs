@@ -16,9 +16,10 @@ namespace Karapinha.Shared.IService
         Task<bool> AtualizarDadosDoUtilizador(int id, UtilizadorAtualizarDTO utilizadorAtualizarDTO);
         Task<bool> AdicionarUtilizador(UtilizadorAdicionarDTO utilizadorAdicionarDTO);
         Task<bool> ApagarUtilizador(int id);
-        Task <bool> AtivarConta(int id);
+        Task <bool> AtivarUtilizador(int id);
         Task<bool> Bloquear_e_DesbloquearConta(int id);
-
         Task<Utilizador> Login(string username, string password);
+        
+    
     }
 }
