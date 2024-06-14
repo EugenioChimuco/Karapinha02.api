@@ -21,7 +21,7 @@ namespace Karapinha.Service
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
-            emailMessage.To.Add(new MailboxAddress("20200787@isptec.co.ao", "20200787@isptec.co.ao"));
+            emailMessage.To.Add(new MailboxAddress(toEmail,toEmail));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("plain") { Text = message };
 

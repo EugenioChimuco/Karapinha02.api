@@ -45,7 +45,7 @@ namespace Karapinha.Services
             utilizador.UserName = uniqueUserName;
             await _utilizadorRepository.Atualizar(utilizador);
 
-            // Enviar email de boas-vindas ao utilizador
+            // Enviar email para o administrativo
             if (utilizador.TipoDeUser == 2) {
                 string subject = "Criação de conta Administrativo";
                 string body = "Bem-vindo ao Karapinha" +
