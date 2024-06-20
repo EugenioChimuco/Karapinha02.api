@@ -47,17 +47,19 @@ namespace Karapinha.Services
 
             // Enviar email para o administrativo
             if (utilizador.TipoDeUser == 2) {
-                string subject = "Criação de conta Administrativo";
-                string body = "Bem-vindo ao Karapinha" +
-                                "Foi registrado como Administrador."+
-                                "Os seus dados de acesso são:"+
+                string subject = "Criação de conta Administrativa";
+                string body = "Bem-vindo ao Karapinha \n" +
+                                " Foi registrado como Administrador.\n" +
+                                " Os seus dados de acesso são:"+
                                 $"Username :{utilizador.UserName}\n" +
                                 $"Senha    :{utilizador.Password}";
                 await _emailService.SendEmailAsync(utilizador.Email,subject,body);       
             }
-
-            // Enviar email ao administrador
-            await EnviarEmailParaAdministrador(utilizador);
+            else
+            {
+                // Enviar email ao administrador
+                await EnviarEmailParaAdministrador(utilizador);
+            }
 
             return true;
         }
@@ -119,11 +121,11 @@ namespace Karapinha.Services
             string unlock = "A sua conta foi desbloqueada...";
             if (utilizador.EstadoDaConta)
             {
-              await  _emailService.SendEmailAsync(utilizador.Email, subject,locked);
+              await  _emailService.SendEmailAsync(utilizador.Email, subject, unlock);
             }
             else
             {
-              await  _emailService.SendEmailAsync(utilizador.Email, subject, unlock);
+              await  _emailService.SendEmailAsync(utilizador.Email, subject,locked);
             }
              
             return await _utilizadorRepository.Atualizar(utilizador);
@@ -198,6 +200,20 @@ namespace Karapinha.Services
         public async Task<Utilizador> MostrarPorUsername(string username)
         {
             return await _utilizadorRepository.MostrarPorUsername(username);
+        }
+
+        public async Task<bool> AtualizarCredencias(int id, PasswordAtualizarDTO passwordDTO)
+        {
+            var utilizador = await _utilizadorRepository.MostrarPorId(id);
+            if (utilizador == null)
+            {
+                return false;
+            }
+
+            utilizador.Password = passwordDTO.Password;
+            utilizador.EstadoDaConta = true; // Defina o EstadoDaConta como true
+
+            return await _utilizadorRepository.Atualizar(utilizador);
         }
     }
 }

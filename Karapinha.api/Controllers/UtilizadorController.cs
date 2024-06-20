@@ -49,6 +49,20 @@ namespace Karapinha.api.Controllers
             return Ok(await _utilizadorService.AtualizarDadosDoUtilizador(id,utilizadorAtualizarDTO));
         }
 
+        [HttpPut("AtualizarCredencias/{id}")]
+        public async Task<ActionResult> AtualizarCredencias(int id, [FromBody] PasswordAtualizarDTO passwordDTO)
+        {
+            var success = await _utilizadorService.AtualizarCredencias(id, passwordDTO);
+            if (success)
+            {
+                return Ok("Credenciais atualizadas com sucesso.");
+            }
+            else
+            {
+                return BadRequest("Não foi possível atualizar as credenciais.");
+            }
+        }
+
         [HttpPut("AtivarConta/{id}")]
         public async Task<ActionResult> AtivarUtilizador(int id)
         {
