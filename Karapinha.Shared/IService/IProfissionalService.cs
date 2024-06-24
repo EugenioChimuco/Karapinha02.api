@@ -14,5 +14,6 @@ namespace Karapinha.Shared.IService
         Task<List<Profissional>> ListarTodosProfissionais();
         Task<bool> ApagarProfissional(int id);
         Task AdicionarHorariosAoProfissional(AdicionarHorariosProfissionalDTO dto);
+        Task<List<ProfissionalComHorariosDTO>> ObterProfissionaisComHorarios();
     }
 }

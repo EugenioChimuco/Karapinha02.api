@@ -15,5 +15,7 @@ namespace Karapinha.DAL.Repositories
         {
             _karapinhaContext = karapinhaContext;
         }
+
+
     }
 }

@@ -53,6 +53,13 @@ namespace Karapinha.api.Controllers
             }
         }
 
+        [HttpGet("listarProfissionalComHorarios")]
+        public async Task<ActionResult<List<ProfissionalComHorariosDTO>>> GetProfissionaisComHorarios()
+        {
+            var result = await _profissionalService.ObterProfissionaisComHorarios();
+            return Ok(result);
+        }
+
     }
 
 }
