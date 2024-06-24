@@ -3,10 +3,7 @@ using Karapinha.DTO;
 using Karapinha.Model;
 using Karapinha.Shared.IRepository;
 using Karapinha.Shared.IService;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Karapinha.Services
@@ -14,13 +11,18 @@ namespace Karapinha.Services
     public class ProfissionalService : IProfissionalService
     {
         private readonly IProfissionalRepository _profissionalRepository;
-        public ProfissionalService(IProfissionalRepository profissionalRepository)
+        private readonly IHorarioRepository _horarioRepository;
+        private readonly IHoraFuncionarioRepository _horarioFuncionarioRepository;
+
+        public ProfissionalService(IProfissionalRepository profissionalRepository, IHorarioRepository horarioRepository, IHoraFuncionarioRepository horarioFuncionarioRepository)
         {
             _profissionalRepository = profissionalRepository;
+            _horarioRepository = horarioRepository;
+            _horarioFuncionarioRepository = horarioFuncionarioRepository;
         }
-        public async Task<bool> AdicionarProfissional(ProfissionalAdicionarDTO profissionalAdicionarDTO)
+        public async Task<int> AdicionarProfissional(ProfissionalAdicionarDTO profissionalAdicionarDTO)
         {
-            var profissional = new Profissional()
+            var profissional = new Profissional
             {
                 NomeCompleto = profissionalAdicionarDTO.NomeCompleto,
                 Email = profissionalAdicionarDTO.Email,
@@ -28,21 +30,23 @@ namespace Karapinha.Services
                 Phone = profissionalAdicionarDTO.Phone,
                 Foto = profissionalAdicionarDTO.Foto,
                 IdCategoria = profissionalAdicionarDTO.IdCategoria
-            
             };
 
-            return await _profissionalRepository.Criar(profissional);
-   
+            await _profissionalRepository.Criar(profissional);
+
+            return profissional.IdProfissional;
         }
+
 
         public async Task<bool> ApagarProfissional(int id)
         {
-            var profissinal = await _profissionalRepository.MostrarPorId(id);
-            if (profissinal == null)
+            var profissional = await _profissionalRepository.MostrarPorId(id);
+            if (profissional == null)
             {
                 return false;
             }
-            return await _profissionalRepository.Apagar(profissinal);
+            await _profissionalRepository.Apagar(profissional);
+            return true;
         }
 
         public async Task<List<Profissional>> ListarTodosProfissionais()
@@ -50,5 +54,30 @@ namespace Karapinha.Services
             return await _profissionalRepository.Listar();
         }
 
+        public async Task AdicionarHorariosAoProfissional(AdicionarHorariosProfissionalDTO dto)
+        {
+            var profissional = await _profissionalRepository.MostrarPorId(dto.IdProfissional);
+            if (profissional == null)
+            {
+                throw new KeyNotFoundException("Profissional não encontrado");
+            }
+
+            foreach (var idHorario in dto.IdHorarios)
+            {
+                var horario = await _horarioRepository.MostrarPorId(idHorario);
+                if (horario == null)
+                {
+                    throw new KeyNotFoundException($"Horário com Id {idHorario} não encontrado");
+                }
+
+                var horarioFuncionario = new HorarioFuncionario
+                {
+                    IdProfissional = dto.IdProfissional,
+                    IdHorario = idHorario
+                };
+
+                await _horarioFuncionarioRepository.Criar(horarioFuncionario);
+            }
+        }
     }
 }

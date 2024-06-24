@@ -34,5 +34,25 @@ namespace Karapinha.api.Controllers
         {
             return Ok(await _profissionalService.ApagarProfissional(id));
         }
+
+        [HttpPost("adicionar-horarios")]
+        public async Task<IActionResult> AdicionarHorariosAoProfissional([FromBody] AdicionarHorariosProfissionalDTO dto)
+        {
+            try
+            {
+                await _profissionalService.AdicionarHorariosAoProfissional(dto);
+                return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
+
 }

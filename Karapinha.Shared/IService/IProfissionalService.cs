@@ -10,8 +10,9 @@ namespace Karapinha.Shared.IService
 {
     public interface IProfissionalService
     {
-        Task<bool> AdicionarProfissional(ProfissionalAdicionarDTO profissionalAdicionarDTO);
+        Task<int> AdicionarProfissional(ProfissionalAdicionarDTO profissionalAdicionarDTO);
         Task<List<Profissional>> ListarTodosProfissionais();
         Task<bool> ApagarProfissional(int id);
+        Task AdicionarHorariosAoProfissional(AdicionarHorariosProfissionalDTO dto);
     }
 }
