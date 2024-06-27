@@ -18,10 +18,42 @@ namespace Karapinha.api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AdicionarUtilizador(ProfissionalAdicionarDTO profissionalAdicionarDTO)
+        public async Task<ActionResult> AdicionarUtilizador([FromForm] ProfissionalAdicionarDTO profissionalAdicionarDTO)
         {
+            if (profissionalAdicionarDTO.Foto != null)
+            {
+                var caminhoFoto = await SalvarFotoAsync(profissionalAdicionarDTO.Foto);
+                profissionalAdicionarDTO.FotoPath = caminhoFoto; // Define o caminho da foto
+            }
+            else
+            {
+                profissionalAdicionarDTO.FotoPath = null; // Garantir que FotoPath seja nulo se não houver foto
+            }
+
             return Ok(await _profissionalService.AdicionarProfissional(profissionalAdicionarDTO));
         }
+
+        private async Task<string> SalvarFotoAsync(IFormFile foto)
+        {
+            var pastaUpload = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imgProfissionais");
+
+            if (!Directory.Exists(pastaUpload))
+            {
+                Directory.CreateDirectory(pastaUpload);
+            }
+
+            // Gera um nome de arquivo único mais curto
+            var nomeArquivoUnico = Guid.NewGuid().ToString().Substring(0, 8) + Path.GetExtension(foto.FileName);
+            var caminhoArquivo = Path.Combine(pastaUpload, nomeArquivoUnico);
+
+            using (var fileStream = new FileStream(caminhoArquivo, FileMode.Create))
+            {
+                await foto.CopyToAsync(fileStream);
+            }
+
+            return $"/imgProfissionais/{nomeArquivoUnico}";
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> ListarTodosUtilizadores()

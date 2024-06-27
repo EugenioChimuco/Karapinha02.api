@@ -30,7 +30,7 @@ namespace Karapinha.Services
                 Email = utilizadorAdicionarDTO.Email,
                 BI = utilizadorAdicionarDTO.Bi,
                 Phone = utilizadorAdicionarDTO.Phone,
-                Foto = utilizadorAdicionarDTO.Foto,
+                FotoPath = utilizadorAdicionarDTO.Foto,
                 Password = utilizadorAdicionarDTO.Password,
                 TipoDeUser = utilizadorAdicionarDTO.TipoDeUser,
             };
@@ -98,7 +98,7 @@ namespace Karapinha.Services
             utilizador.NomeCompleto = utilizadorAtualizarDTO.NomeCompleto;
             utilizador.Email = utilizadorAtualizarDTO.Email;
             utilizador.BI = utilizadorAtualizarDTO.Bi;
-            utilizador.Foto = utilizadorAtualizarDTO.Foto;
+            utilizador.FotoPath = utilizadorAtualizarDTO.Foto;
             utilizador.Phone = utilizadorAtualizarDTO.Phone;
             utilizador.Password = utilizadorAtualizarDTO.Password;
 

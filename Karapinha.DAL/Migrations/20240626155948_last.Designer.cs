@@ -4,6 +4,7 @@ using Karapinha.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Karapinha.DAL.Migrations
 {
     [DbContext(typeof(KarapinhaContext))]
-    partial class KarapinhaContextModelSnapshot : ModelSnapshot
+    [Migration("20240626155948_last")]
+    partial class last
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,9 +145,11 @@ namespace Karapinha.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Foto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FotoPath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdCategoria")
@@ -209,9 +214,11 @@ namespace Karapinha.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Foto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FotoPath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeCompleto")

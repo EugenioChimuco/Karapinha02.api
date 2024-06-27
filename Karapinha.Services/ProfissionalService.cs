@@ -31,7 +31,7 @@ namespace Karapinha.Services
                 Email = profissionalAdicionarDTO.Email,
                 BI = profissionalAdicionarDTO.Bi,
                 Phone = profissionalAdicionarDTO.Phone,
-                Foto = profissionalAdicionarDTO.Foto,
+                FotoPath = profissionalAdicionarDTO.FotoPath, // Armazena o caminho no banco de dados
                 IdCategoria = profissionalAdicionarDTO.IdCategoria
             };
 
@@ -39,7 +39,6 @@ namespace Karapinha.Services
 
             return profissional.IdProfissional;
         }
-
 
         public async Task<bool> ApagarProfissional(int id)
         {

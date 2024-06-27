@@ -14,19 +14,18 @@ namespace Karapinha.Model
         public string? BI { get; set; }
         [Unique]
         public string? Email { get; set; }
-        public string? Foto { get; set; }
+        public string ? FotoPath { get; set; }
         public string? Phone { get; set; }
 
         public Pessoa()
         {
 
         }
-        public Pessoa(string? nomeCompleto, string? bi, string? email, string? foto, string? phone)
+        public Pessoa(string? nomeCompleto, string? bi, string? email, string? phone)
         {
             NomeCompleto = nomeCompleto;
             BI = bi;
             Email = email;
-            Foto = foto;
             Phone = phone;
         }
     }

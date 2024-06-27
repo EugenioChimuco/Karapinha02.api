@@ -21,8 +21,8 @@ namespace Karapinha.Model
 
         }
         public Profissional(int idProfissional, int idCategoria, string?
-            nomeCompleto, string? bi, string? email, string? foto, string? phone)
-            : base(nomeCompleto, bi, email, foto, phone)
+            nomeCompleto, string? bi, string? email, string? fotoPath, string? phone)
+            : base(nomeCompleto, bi, email, phone)
         {
             IdProfissional = idProfissional;
             IdCategoria = idCategoria;

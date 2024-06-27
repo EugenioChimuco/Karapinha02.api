@@ -23,8 +23,8 @@ namespace Karapinha.Model
 
         }
         public Utilizador(int idUtilizador, string? userName, string? password, int tipoDeUser,
-                          string? nomeCompleto, string? bi, string? email, string? foto, string? phone)
-            : base(nomeCompleto, bi, email, foto, phone)
+                          string? nomeCompleto, string? bi, string? email, string? phone)
+            : base(nomeCompleto, bi, email, phone)
         {
             IdUtilizador = idUtilizador;
             UserName = userName;
