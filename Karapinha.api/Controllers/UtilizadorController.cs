@@ -19,10 +19,40 @@ namespace Karapinha.api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AdicionarUtilizador(UtilizadorAdicionarDTO utilizadorAdicionarDTO)
+        public async Task<ActionResult> AdicionarUtilizador([FromForm] UtilizadorAdicionarDTO utilizadorAdicionarDTO)
         {
+            if (utilizadorAdicionarDTO.Foto != null)
+            {
+                var caminhoFoto = await SalvarFotoAsync(utilizadorAdicionarDTO.Foto);
+                utilizadorAdicionarDTO.FotoPath = caminhoFoto;
+            }
+            else
+            {
+                utilizadorAdicionarDTO.FotoPath = null;
+            }
             return Ok(await _utilizadorService.AdicionarUtilizador(utilizadorAdicionarDTO));
         }
+        private async Task<string> SalvarFotoAsync(IFormFile foto)
+        {
+            var pastaUpload = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imgUtilizadores");
+
+            if (!Directory.Exists(pastaUpload))
+            {
+                Directory.CreateDirectory(pastaUpload);
+            }
+
+            // Gera um nome de arquivo único mais curto
+            var nomeArquivoUnico = Guid.NewGuid().ToString().Substring(0, 8) + Path.GetExtension(foto.FileName);
+            var caminhoArquivo = Path.Combine(pastaUpload, nomeArquivoUnico);
+
+            using (var fileStream = new FileStream(caminhoArquivo, FileMode.Create))
+            {
+                await foto.CopyToAsync(fileStream);
+            }
+
+            return $"/imgUtilizadores/{nomeArquivoUnico}";
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> ApagarUtilizador(int id)
