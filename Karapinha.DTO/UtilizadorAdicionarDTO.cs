@@ -10,7 +10,7 @@ namespace Karapinha.DTO
 {
     public class UtilizadorAdicionarDTO
     {
-        [JsonIgnore]
+   
         public string? UserName { get; set; }
         public string? Password { get; set; }
         public int TipoDeUser { get; set; }

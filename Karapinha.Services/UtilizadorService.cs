@@ -19,7 +19,7 @@ namespace Karapinha.Services
         {
             _utilizadorRepository = utilizadorRepository;
             _emailService = emailService;
-            _adminEmail = "chimuco007@gmail.com"; // Substitua pelo email real do administrador
+            _adminEmail = "chimuco007@gmail.com"; 
         }
 
         public async Task<bool> AdicionarUtilizador(UtilizadorAdicionarDTO utilizadorAdicionarDTO)
@@ -33,6 +33,7 @@ namespace Karapinha.Services
                 FotoPath = utilizadorAdicionarDTO.FotoPath,
                 Password = utilizadorAdicionarDTO.Password,
                 TipoDeUser = utilizadorAdicionarDTO.TipoDeUser,
+                UserName = utilizadorAdicionarDTO.UserName,
             };
 
             bool criado = await _utilizadorRepository.Criar(utilizador);
@@ -40,10 +41,6 @@ namespace Karapinha.Services
             {
                 return false;
             }
-
-            string uniqueUserName = GerarUserName(utilizador.NomeCompleto, utilizador.IdUtilizador);
-            utilizador.UserName = uniqueUserName;
-            await _utilizadorRepository.Atualizar(utilizador);
 
             // Enviar email para o administrativo
             if (utilizador.TipoDeUser == 2) {
@@ -94,17 +91,12 @@ namespace Karapinha.Services
             {
                 return false;
             }
-
             utilizador.NomeCompleto = utilizadorAtualizarDTO.NomeCompleto;
             utilizador.Email = utilizadorAtualizarDTO.Email;
             utilizador.BI = utilizadorAtualizarDTO.Bi;
-            utilizador.FotoPath = utilizadorAtualizarDTO.Foto;
+            utilizador.FotoPath = utilizadorAtualizarDTO.FotoPath;
             utilizador.Phone = utilizadorAtualizarDTO.Phone;
             utilizador.Password = utilizadorAtualizarDTO.Password;
-
-            string uniqueUserName = GerarUserName(utilizador.NomeCompleto, utilizador.IdUtilizador);
-
-            utilizador.UserName = uniqueUserName;
             return await _utilizadorRepository.Atualizar(utilizador);
         }
 
@@ -158,33 +150,6 @@ namespace Karapinha.Services
             await _emailService.SendEmailAsync(to, subject, body);
         }
 
-        // Método para gerar o nome de utilizador
-        private string GerarUserName(string nomeCompleto, int id)
-        {
-            string primeiroNome = nomeCompleto.Split(' ')[0];
-            string primeiroNomeSemCaracteresEspeciais = RemoveCaracteresEspeciais(primeiroNome);
-            string userName = primeiroNomeSemCaracteresEspeciais + id.ToString();
-            return userName;
-        }
-
-        // Método para remover caracteres especiais
-        private string RemoveCaracteresEspeciais(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-                return str;
-
-            str = str.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
-            foreach (char c in str)
-            {
-                if (char.IsLetterOrDigit(c))
-                {
-                    sb.Append(c);
-                }
-            }
-
-            return sb.ToString();
-        }
 
         public async Task<Utilizador?> Login(string username, string password)
         {
@@ -209,9 +174,9 @@ namespace Karapinha.Services
             {
                 return false;
             }
-
+            utilizador.UserName = passwordDTO.UserName;
             utilizador.Password = passwordDTO.Password;
-            utilizador.EstadoDaConta = true; // Defina o EstadoDaConta como true
+            utilizador.EstadoDaConta = true; 
 
             return await _utilizadorRepository.Atualizar(utilizador);
         }

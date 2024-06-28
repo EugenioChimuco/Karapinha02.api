@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +15,10 @@ namespace Karapinha.DTO
         public string? NomeCompleto { get; set; }
         public string? Bi { get; set; }
         public string? Email { get; set; }
-        public string? Foto { get; set; }
+        public IFormFile Foto { get; set; }
+        public string? FotoPath { get; set; }
         public string? Phone { get; set; }
         public string? Password { get; set; }
+    
     }
 }

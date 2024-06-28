@@ -74,8 +74,17 @@ namespace Karapinha.api.Controllers
 
         
         [HttpPut("AtualizarUtilizador/{id}")]
-        public async Task<ActionResult> AtualizarDados(int id, [FromBody] UtilizadorAtualizarDTO utilizadorAtualizarDTO)
+        public async Task<ActionResult> AtualizarDados(int id, [FromForm] UtilizadorAtualizarDTO utilizadorAtualizarDTO)
         {
+            if (utilizadorAtualizarDTO.Foto != null)
+            {
+                var caminhoFoto = await SalvarFotoAsync(utilizadorAtualizarDTO.Foto);
+                utilizadorAtualizarDTO.FotoPath = caminhoFoto;
+            }
+            else
+            {
+                utilizadorAtualizarDTO.FotoPath = null;
+            }
             return Ok(await _utilizadorService.AtualizarDadosDoUtilizador(id,utilizadorAtualizarDTO));
         }
 
