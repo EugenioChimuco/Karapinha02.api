@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Karapinha.DTO
@@ -15,6 +16,7 @@ namespace Karapinha.DTO
         public string Phone { get; set; }
         public IFormFile Foto { get; set; } 
         public int IdCategoria { get; set; }
+        [JsonIgnore]
         public string ? FotoPath { get; set; }
     }
 

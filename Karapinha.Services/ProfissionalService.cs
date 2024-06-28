@@ -31,7 +31,7 @@ namespace Karapinha.Services
                 Email = profissionalAdicionarDTO.Email,
                 BI = profissionalAdicionarDTO.Bi,
                 Phone = profissionalAdicionarDTO.Phone,
-                FotoPath = profissionalAdicionarDTO.FotoPath, // Armazena o caminho no banco de dados
+                FotoPath = profissionalAdicionarDTO.FotoPath, 
                 IdCategoria = profissionalAdicionarDTO.IdCategoria
             };
 

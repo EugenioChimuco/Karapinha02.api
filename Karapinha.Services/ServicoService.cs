@@ -25,6 +25,7 @@ namespace Karapinha.Services
             {
                 TipoDeServico = ServicoAdicionarDTO.TipoDeServico,
                 PrecoDoServico = ServicoAdicionarDTO.PrecoDoServico,
+                FotoPath = ServicoAdicionarDTO.FotoPath,
                 IdCategoria = ServicoAdicionarDTO.IdCategoria,
             };
 

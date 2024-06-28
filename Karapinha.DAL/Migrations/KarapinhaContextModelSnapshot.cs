@@ -30,6 +30,9 @@ namespace Karapinha.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategoria"));
 
+                    b.Property<bool>("EstadoCategoria")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Tipo")
                         .HasColumnType("nvarchar(max)");
 
@@ -141,9 +144,6 @@ namespace Karapinha.DAL.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Foto")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FotoPath")
                         .HasColumnType("nvarchar(max)");
 
@@ -170,6 +170,9 @@ namespace Karapinha.DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdServico"));
+
+                    b.Property<string>("FotoPath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdCategoria")
                         .HasColumnType("int");
@@ -207,9 +210,6 @@ namespace Karapinha.DAL.Migrations
 
                     b.Property<bool>("EstadoDoUtilizador")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Foto")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FotoPath")
                         .HasColumnType("nvarchar(max)");

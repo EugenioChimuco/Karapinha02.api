@@ -14,6 +14,7 @@ namespace Karapinha.Model
         public int IdServico { get; set; }
         public string TipoDeServico { get; set; }
         public float PrecoDoServico { get; set; }
+        public string? FotoPath { get; set; }
         public int IdCategoria { get; set; }
         [ForeignKey(nameof(IdCategoria))]
         public Categoria? Categoria { get; set; }

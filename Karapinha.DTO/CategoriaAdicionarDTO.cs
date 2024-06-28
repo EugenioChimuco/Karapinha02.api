@@ -9,5 +9,6 @@ namespace Karapinha.DTO
     public class CategoriaAdicionarDTO
     {
         public string Tipo { get; set; }
+
     }
 }

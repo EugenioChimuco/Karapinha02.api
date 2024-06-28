@@ -20,6 +20,7 @@ namespace Karapinha.Services
             var categoria = new Categoria()
             {
                 Tipo = categoriaAdicionarDTO.Tipo,
+                EstadoCategoria = true
             };
             return await _repository.Criar(categoria);
         }
@@ -47,6 +48,18 @@ namespace Karapinha.Services
 
                 return await _repository.Atualizar(categoria);
             }
+
+        public async Task<bool> BloquearCategoria(int id)
+        {
+            var categoria = await _repository.MostrarPorId(id);
+
+            if (categoria == null)
+            {
+                return false;
+            }
+            categoria.EstadoCategoria = false;
+            return await _repository.Atualizar(categoria);
+        }
 
         public async Task<Categoria> ListarPorId(int id)
         {

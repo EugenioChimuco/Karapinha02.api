@@ -15,5 +15,6 @@ namespace Karapinha.Shared.IService
         Task<bool> AtualizarCategoria(int id ,CategoriaAtualizarDTO categoriaAtualizarDTO);
         Task <bool> AdicionarCategoria(CategoriaAdicionarDTO categoriaAdicionarDTO);
         Task<bool> ApagarCategoria(int id);
+        Task<bool> BloquearCategoria(int id);
     }
 }

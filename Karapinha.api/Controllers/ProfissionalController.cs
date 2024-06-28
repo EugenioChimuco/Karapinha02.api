@@ -23,11 +23,11 @@ namespace Karapinha.api.Controllers
             if (profissionalAdicionarDTO.Foto != null)
             {
                 var caminhoFoto = await SalvarFotoAsync(profissionalAdicionarDTO.Foto);
-                profissionalAdicionarDTO.FotoPath = caminhoFoto; // Define o caminho da foto
+                profissionalAdicionarDTO.FotoPath = caminhoFoto; 
             }
             else
             {
-                profissionalAdicionarDTO.FotoPath = null; // Garantir que FotoPath seja nulo se não houver foto
+                profissionalAdicionarDTO.FotoPath = null; 
             }
 
             return Ok(await _profissionalService.AdicionarProfissional(profissionalAdicionarDTO));

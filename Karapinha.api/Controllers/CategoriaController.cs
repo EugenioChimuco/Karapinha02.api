@@ -1,4 +1,5 @@
 ﻿using Karapinha.DTO;
+using Karapinha.Services;
 using Karapinha.Shared.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,12 @@ namespace Karapinha.api.Controllers
         public async Task<ActionResult> AtualizarCategoria(int id, CategoriaAtualizarDTO categoriaAtualizarDTO)
         {
             return Ok(await _service.AtualizarCategoria(id,categoriaAtualizarDTO));
+        }
+
+        [HttpPut("BloquearCategoria/{id}")]
+        public async Task<ActionResult> AtivarUtilizador(int id)
+        {
+            return Ok(await _service.BloquearCategoria(id));
         }
 
     }

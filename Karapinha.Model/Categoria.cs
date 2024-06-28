@@ -12,6 +12,7 @@ namespace Karapinha.Model
         [Key]
         public int IdCategoria { get; set; }
         public string? Tipo { get; set; }
+        public bool EstadoCategoria { get; set;}
 
     }
 }

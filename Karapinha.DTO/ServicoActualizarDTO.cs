@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace Karapinha.DTO
         public int IdServico { get; set; }
         public string TipoDeServico { get; set; }
         public float PrecoDoServico { get; set; }
+        public IFormFile Foto { get; set; }
+        public string? FotoPath { get; set; }
         public int IdCategoria { get; set; }
     }
 }
