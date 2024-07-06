@@ -18,9 +18,16 @@ namespace Karapinha.api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AgendarMarcacao(AdicionarMarcacaoDTO adicionarMarcacaoDTO)
+        public async Task<IActionResult> CriarMarcacao([FromBody] MarcacaoDTO marcacaoDto)
         {
-            return Ok(await _marcacaoService.AdicionarMarcacao(adicionarMarcacaoDTO));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _marcacaoService.AdicionarMarcacao(marcacaoDto);
+
+            return CreatedAtAction(nameof(MostrarMarcacaoPorId), new { id = result.IdMarcacao }, result);
         }
 
         [HttpPut("AceitarPedidoDeMarcacao/{id}")]
@@ -40,5 +47,14 @@ namespace Karapinha.api.Controllers
         {
             return Ok(await _marcacaoService.MostrarMarcacaoPorId(id));
         }
+
+        [HttpGet("listarMarcacoesComServicos")]
+        public async Task<IActionResult> ListarMarcacoesComServicos()
+        {
+            var marcacoesComServicos = await _marcacaoService.ObterMarcacoesComServicos();
+            return Ok(marcacoesComServicos);
+        }
+
+
     }
 }

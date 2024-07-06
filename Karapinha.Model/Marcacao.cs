@@ -22,10 +22,9 @@ namespace Karapinha.Model
         [ForeignKey(nameof(IdUtilizador))]
         public Utilizador? Utilizador { get; set; }
         
-        public Marcacao(int idMarcacao, DateOnly dataDeMarcacao, float precoDaMarcacao,
+        public Marcacao(DateOnly dataDeMarcacao, float precoDaMarcacao,
                           int? idUtilizador)
         {
-            IdMarcacao = idMarcacao;
             IdUtilizador = idUtilizador;
             DataDeMarcacao = dataDeMarcacao;
             PrecoDaMarcacao = precoDaMarcacao;

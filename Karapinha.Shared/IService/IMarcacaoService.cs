@@ -12,7 +12,10 @@ namespace Karapinha.Shared.IService
     {
         Task<Marcacao> MostrarMarcacaoPorId(int id);
         Task<List<Marcacao>> MostrarTodasMarcacoes();
-        Task<bool> AdicionarMarcacao(AdicionarMarcacaoDTO adicionarMarcacaoDTO);
+        Task<MarcacaoDTO> AdicionarMarcacao(MarcacaoDTO adicionarMarcacaoDTO);
         Task<bool> AceitarPedidoDeMarcacao(int id);
+        Task<List<MarcacaoComServicosDTO>> ObterMarcacoesComServicos();
+
+
     }
 }
