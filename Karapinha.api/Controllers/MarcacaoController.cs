@@ -17,19 +17,6 @@ namespace Karapinha.api.Controllers
             _marcacaoService = marcacaoService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CriarMarcacao([FromBody] MarcacaoDTO marcacaoDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _marcacaoService.AdicionarMarcacao(marcacaoDto);
-
-            return CreatedAtAction(nameof(MostrarMarcacaoPorId), new { id = result.IdMarcacao }, result);
-        }
-
         [HttpPut("AceitarPedidoDeMarcacao/{id}")]
         public async Task<ActionResult> AceitarMarcacao(int id)
         {
@@ -48,11 +35,29 @@ namespace Karapinha.api.Controllers
             return Ok(await _marcacaoService.MostrarMarcacaoPorId(id));
         }
 
-        [HttpGet("listarMarcacoesComServicos")]
-        public async Task<IActionResult> ListarMarcacoesComServicos()
+        [HttpPost("criar-com-servicos")]
+        public async Task<IActionResult> CriarMarcacaoComServicos([FromBody] MarcacaoDTO marcacaoDTO)
         {
-            var marcacoesComServicos = await _marcacaoService.ObterMarcacoesComServicos();
-            return Ok(marcacoesComServicos);
+            var resultado = await _marcacaoService.CriarMarcacaoComServicos(marcacaoDTO);
+            if (resultado)
+                return Ok("Marcação com serviços criada com sucesso.");
+            else
+                return BadRequest("Não foi possível criar a marcação com serviços.");
+        }
+
+        [HttpGet("marcacoes-com-servicos")]
+        public async Task<ActionResult<List<MarcacaoComServicosDTO>>> ListarMarcacoesComServicos()
+        {
+            try
+            {
+                var marcacoesComServicos = await _marcacaoService.ListarMarcacoesComServicos();
+                return Ok(marcacoesComServicos);
+            }
+            catch (Exception ex)
+            {
+                // Logar o erro
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao listar marcações com serviços: " + ex.Message);
+            }
         }
 
 

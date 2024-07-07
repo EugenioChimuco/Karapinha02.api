@@ -17,12 +17,6 @@ namespace Karapinha.api.Controllers
             _marcacaoServico = marcacaoServico;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AdicionarMarcacaoServico(AdicionarMarcacaoServicoDTO adicionarMarcacaoServicoDTO)
-        {
-            return Ok(await _marcacaoServico.AdicionarMarcacaoServico(adicionarMarcacaoServicoDTO));
-        }
-
         [HttpGet]
         public async Task<ActionResult> ListarTodosUtilizadores()
         {
@@ -34,6 +28,28 @@ namespace Karapinha.api.Controllers
         {
             return Ok(await _marcacaoServico.MostrarMarcacaoPorID(id));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AdicionarMarcacaoServico([FromBody] MarcacaoServicoDTO marcacaoServicoDTO)
+        {
+            try
+            {
+                var resultado = await _marcacaoServico.AdicionarMarcacaoServico(marcacaoServicoDTO);
+                if (resultado)
+                {
+                    return Ok(new { message = "Marcacao de servico adicionada com sucesso." });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Falha ao adicionar marcacao de servico." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
+
 
     }
 }

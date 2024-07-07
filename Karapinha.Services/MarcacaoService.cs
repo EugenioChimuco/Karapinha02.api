@@ -1,8 +1,10 @@
-﻿using Karapinha.DAL.Repositories;
+﻿using Karapinha.DAL;
+using Karapinha.DAL.Repositories;
 using Karapinha.DTO;
 using Karapinha.Model;
 using Karapinha.Shared.IRepository;
 using Karapinha.Shared.IService;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +15,14 @@ namespace Karapinha.Services
 {
     public class MarcacaoService : IMarcacaoService
     {
+        private readonly KarapinhaContext _context;
         private readonly IMarcacaoServicoRepository _marcacaoServicoRepository;
         private readonly IMarcacaoRepository _marcacaoRepository;
         private readonly IServicoRepository _servicoRepository;
 
-        public MarcacaoService(IMarcacaoRepository marcacaoRepository, IMarcacaoServicoRepository marcacaoServicoRepository, IServicoRepository servicoRepository)
+        public MarcacaoService(KarapinhaContext context, IMarcacaoRepository marcacaoRepository, IMarcacaoServicoRepository marcacaoServicoRepository, IServicoRepository servicoRepository)
         {
+            _context = context;
             _marcacaoRepository = marcacaoRepository;
             _marcacaoServicoRepository = marcacaoServicoRepository;
             _servicoRepository = servicoRepository;
@@ -33,35 +37,7 @@ namespace Karapinha.Services
             }
             marcacao.EstadoDeMarcacao = true;
             return await _marcacaoRepository.Atualizar(marcacao);
-        }
-
-        public async Task<MarcacaoDTO> AdicionarMarcacao(MarcacaoDTO adicionarMarcacaoDTO)
-        {
-            var marcacao = new Marcacao(
-                dataDeMarcacao: adicionarMarcacaoDTO.DataDeMarcacao,
-                idUtilizador: adicionarMarcacaoDTO.IdUtilizador,
-                precoDaMarcacao: adicionarMarcacaoDTO.PrecoDaMarcacao
-            )
-            {
-                EstadoDeMarcacao = false,
-            };
-
-            await _marcacaoRepository.Criar(marcacao);
-
-            foreach (var servicoId in adicionarMarcacaoDTO.ServicoIds)
-            {
-                var marcacaoServico = new MarcacaoServico
-                {
-                    IdMarcacao = marcacao.IdMarcacao,
-                    IdServico = servicoId
-                };
-
-                await _marcacaoServicoRepository.Criar(marcacaoServico);
-            }
-
-            return adicionarMarcacaoDTO;
-        }
-
+        }      
         public async Task<Marcacao> MostrarMarcacaoPorId(int id)
         {
             var marcacao = await _marcacaoRepository.MostrarPorId(id);
@@ -74,56 +50,71 @@ namespace Karapinha.Services
         {
             return await _marcacaoRepository.Listar();
         }
-
-        public async Task<List<MarcacaoComServicosDTO>> ObterMarcacoesComServicos()
+        public async Task<bool> CriarMarcacaoComServicos(MarcacaoDTO marcacaoDTO)
         {
-            var marcacoes = await _marcacaoRepository.Listar();
-            var marcacaoServicos = await _marcacaoServicoRepository.Listar();
-            var servicos = await _servicoRepository.Listar();
-
-            if (marcacoes == null || marcacaoServicos == null || servicos == null)
+            // Cria uma nova entidade de Marcacao
+            var novaMarcacao = new Marcacao
             {
-                throw new InvalidOperationException("One of the repositories returned null.");
-            }
+                DataDeMarcacao = marcacaoDTO.DataDeMarcacao,
+                PrecoDaMarcacao = marcacaoDTO.PrecoDaMarcacao,
+                IdUtilizador = marcacaoDTO.IdUtilizador,
+                EstadoDeMarcacao = false, // Por padrão, assume como não concluída
+                ListaMarcacoes = new List<MarcacaoServico>()
+            };
 
-            var result = from marcacao in marcacoes
-                         join marcacaoServico in marcacaoServicos on marcacao.IdMarcacao equals marcacaoServico.IdMarcacao
-                         join servico in servicos on marcacaoServico.IdServico equals servico.IdServico
-                         select new
-                         {
-                             marcacao.IdMarcacao,
-                             marcacao.DataDeMarcacao,
-                             marcacao.PrecoDaMarcacao,
-                             marcacao.EstadoDeMarcacao,
-                             marcacao.IdUtilizador,
-                             servico.IdServico,
-                             servico.TipoDeServico,
-                             servico.PrecoDoServico,
-                         };
-
-            if (result == null)
+            // Adiciona os serviços à marcação
+            foreach (var marcacaoServicoDTO in marcacaoDTO.ListaMarcacoes)
             {
-                throw new InvalidOperationException("Query result is null.");
-            }
-
-            var groupedResult = result
-                .GroupBy(m => new { m.IdMarcacao, m.DataDeMarcacao, m.PrecoDaMarcacao, m.EstadoDeMarcacao, m.IdUtilizador })
-                .Select(g => new MarcacaoComServicosDTO
+                var novoMarcacaoServico = new MarcacaoServico
                 {
-                    IdMarcacao = g.Key.IdMarcacao,
-                    DataDeMarcacao = g.Key.DataDeMarcacao,
-                    PrecoDaMarcacao = g.Key.PrecoDaMarcacao,
-                    EstadoDeMarcacao = g.Key.EstadoDeMarcacao,
-                    IdUtilizador = g.Key.IdUtilizador,
-                    Servicos = g.Select(s => new ServicoDTO
-                    {
-                        IdServico = s.IdServico,
-                        TipoDeServico = s.TipoDeServico,
-                        PrecoDoServico = s.PrecoDoServico,
-                    }).ToList()
-                }).ToList();
+                    IdServico = marcacaoServicoDTO.IdServico,
+                    IdProfissional = marcacaoServicoDTO.IdProfissional,
+                    DataMarcacao = marcacaoServicoDTO.DataMarcacao,
+                    IdHorario = marcacaoServicoDTO.HoraMarcacao
+                };
 
-            return groupedResult;
+                // Adiciona o novo MarcacaoServico à lista de MarcacaoServico da novaMarcacao
+                novaMarcacao.ListaMarcacoes.Add(novoMarcacaoServico);
+            }
+
+            // Cria a marcação no banco de dados
+            var criadaComSucesso = await _marcacaoRepository.Criar(novaMarcacao);
+
+            return criadaComSucesso;
         }
+
+        public async Task<List<MarcacaoComServicosDTO>> ListarMarcacoesComServicos()
+        {
+            var marcacoes = await _context.Marcacoes.Include(m => m.ListaMarcacoes).ToListAsync();
+
+            var marcacoesComServicosDTO = new List<MarcacaoComServicosDTO>();
+
+            foreach (var marcacao in marcacoes)
+            {
+                var marcacaoDTO = new MarcacaoComServicosDTO
+                {
+                    IdMarcacao = marcacao.IdMarcacao,
+                    DataDeMarcacao = marcacao.DataDeMarcacao,
+                    PrecoDaMarcacao = marcacao.PrecoDaMarcacao,
+                    EstadoDeMarcacao = marcacao.EstadoDeMarcacao,
+                    IdUtilizador = marcacao.IdUtilizador,
+                    ListaMarcacoes = marcacao.ListaMarcacoes.Select(ms => new MarcacaoServicoDTO
+                    {
+                        IdMarcacaoServico = ms.IdMarcacaoServico,
+                        IdServico = ms.IdServico,
+                        IdProfissional = ms.IdProfissional,
+                        DataMarcacao = ms.DataMarcacao,
+                        HoraMarcacao = ms.IdHorario
+                    }).ToList()
+                };
+
+                marcacoesComServicosDTO.Add(marcacaoDTO);
+            }
+
+            return marcacoesComServicosDTO;
+        }
+
+
+
     }
 }

@@ -16,16 +16,28 @@ namespace Karapinha.Services
             _repository = repository;
         }
 
-        public async Task<bool> AdicionarMarcacaoServico(AdicionarMarcacaoServicoDTO adicionarMarcacaoServicoDTO)
+        public async Task<bool> AdicionarMarcacaoServico(MarcacaoServicoDTO marcacaoServicoDTO)
         {
-            var marcacao = new Model.MarcacaoServico()
+            try
             {
-                IdServico = adicionarMarcacaoServicoDTO.IdServico,
-                IdMarcacao = adicionarMarcacaoServicoDTO.IdMarcacao
-            };
-            return await _repository.Criar(marcacao);
-        }
+                var marcacaoServico = new MarcacaoServico
+                {
+                    IdServico = marcacaoServicoDTO.IdServico,
+                    IdProfissional = marcacaoServicoDTO.IdProfissional,
+                    DataMarcacao = marcacaoServicoDTO.DataMarcacao, 
+                    IdHorario = marcacaoServicoDTO.HoraMarcacao,
 
+                };
+
+                await _repository.Criar(marcacaoServico);
+                return true;
+            }
+            catch (Exception)
+            {
+                // Lidar com exceções, logar, etc.
+                return false;
+            }
+        }
         public async Task<Model.MarcacaoServico> MostrarMarcacaoPorID(int id)
         {
             return await _repository.MostrarPorId(id);

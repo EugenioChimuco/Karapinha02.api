@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Karapinha.DTO\Karapinha.DTO.csproj" />
     <ProjectReference Include="..\Karapinha.Model\Karapinha.Model.csproj" />
   </ItemGroup>

@@ -109,23 +109,36 @@ namespace Karapinha.DAL.Migrations
 
             modelBuilder.Entity("Karapinha.Model.MarcacaoServico", b =>
                 {
-                    b.Property<int>("IdMArcacoaServico")
+                    b.Property<int>("IdMarcacaoServico")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMArcacoaServico"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMarcacaoServico"));
 
-                    b.Property<int>("IdMarcacao")
+                    b.Property<DateOnly>("DataMarcacao")
+                        .HasColumnType("date");
+
+                    b.Property<int>("IdHorario")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProfissional")
                         .HasColumnType("int");
 
                     b.Property<int>("IdServico")
                         .HasColumnType("int");
 
-                    b.HasKey("IdMArcacoaServico");
+                    b.Property<int?>("MarcacaoIdMarcacao")
+                        .HasColumnType("int");
 
-                    b.HasIndex("IdMarcacao");
+                    b.HasKey("IdMarcacaoServico");
+
+                    b.HasIndex("IdHorario");
+
+                    b.HasIndex("IdProfissional");
 
                     b.HasIndex("IdServico");
+
+                    b.HasIndex("MarcacaoIdMarcacao");
 
                     b.ToTable("MarcacaoServicos");
                 });
@@ -264,9 +277,15 @@ namespace Karapinha.DAL.Migrations
 
             modelBuilder.Entity("Karapinha.Model.MarcacaoServico", b =>
                 {
-                    b.HasOne("Karapinha.Model.Marcacao", "Marcacao")
+                    b.HasOne("Karapinha.Model.Horario", "Horario")
                         .WithMany()
-                        .HasForeignKey("IdMarcacao")
+                        .HasForeignKey("IdHorario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Karapinha.Model.Profissional", "Profissional")
+                        .WithMany()
+                        .HasForeignKey("IdProfissional")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -276,7 +295,13 @@ namespace Karapinha.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Marcacao");
+                    b.HasOne("Karapinha.Model.Marcacao", null)
+                        .WithMany("ListaMarcacoes")
+                        .HasForeignKey("MarcacaoIdMarcacao");
+
+                    b.Navigation("Horario");
+
+                    b.Navigation("Profissional");
 
                     b.Navigation("Servico");
                 });
@@ -301,6 +326,11 @@ namespace Karapinha.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("Karapinha.Model.Marcacao", b =>
+                {
+                    b.Navigation("ListaMarcacoes");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,22 +16,13 @@ namespace Karapinha.Model
         public int IdMarcacao { get; set; }
         public DateOnly DataDeMarcacao { get; set; }
         public float PrecoDaMarcacao { get; set; }
-        public Boolean EstadoDeMarcacao { get; set; }
+        public bool EstadoDeMarcacao { get; set; } = false;
         public int? IdUtilizador { get; set; }
 
         [ForeignKey(nameof(IdUtilizador))]
-        public Utilizador? Utilizador { get; set; }
-        
-        public Marcacao(DateOnly dataDeMarcacao, float precoDaMarcacao,
-                          int? idUtilizador)
-        {
-            IdUtilizador = idUtilizador;
-            DataDeMarcacao = dataDeMarcacao;
-            PrecoDaMarcacao = precoDaMarcacao;
-            EstadoDeMarcacao = false;
-
-        }
-
+        public Utilizador Utilizador { get; set; }
+        public List<MarcacaoServico> ListaMarcacoes { get; set; } = new List<MarcacaoServico>();
     }
+
 }
 

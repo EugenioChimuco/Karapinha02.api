@@ -11,8 +11,8 @@ namespace Karapinha.DTO
         public int IdMarcacao { get; set; }
         public DateOnly DataDeMarcacao { get; set; }
         public float PrecoDaMarcacao { get; set; }
-        public Boolean EstadoDeMarcacao { get; set; }
+        public bool EstadoDeMarcacao { get; set; }
         public int? IdUtilizador { get; set; }
-        public List<ServicoDTO> Servicos { get; set; } = new List<ServicoDTO>();
+        public List<MarcacaoServicoDTO> ListaMarcacoes { get; set; }
     }
 }

@@ -9,12 +9,11 @@ namespace Karapinha.DTO
 {
     public class MarcacaoDTO
     {
-        [JsonIgnore]
-        public int IdMarcacao { get; set; }
+        
         public DateOnly DataDeMarcacao { get; set; }
         public float PrecoDaMarcacao { get; set; }
         public int? IdUtilizador { get; set; }
-        public List<int> ServicoIds { get; set; } = new List<int>();
+        public List<MarcacaoServicoDTO> ListaMarcacoes { get; set; }
     }
 
 }

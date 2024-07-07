@@ -11,8 +11,8 @@ namespace Karapinha.Shared.IService
     public interface IMarcacaoServico
     {
         Task<MarcacaoServico> MostrarMarcacaoPorID(int id);
-        Task<bool> AdicionarMarcacaoServico(AdicionarMarcacaoServicoDTO adicionarMarcacaoServicoDTO);
         Task<List<MarcacaoServico>> MostrarTodasMarcacoes();
-        
+        Task<bool> AdicionarMarcacaoServico(MarcacaoServicoDTO marcacaoServicoDTO);
+
     }
 }
