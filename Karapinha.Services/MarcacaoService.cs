@@ -8,6 +8,7 @@ using Karapinha.Shared.IService;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -167,6 +168,146 @@ namespace Karapinha.Services
             ).ToList();
 
             return marcacoesDTO;
+        }
+
+        public async Task<List<ProfissionalMaisRequisitadoDTO>> ListarProfissionaisMaisRequisitados()
+        {
+            var profissionaisMaisRequisitados = await _context.Marcacoes
+                .Include(m => m.ListaMarcacoes)
+                .SelectMany(m => m.ListaMarcacoes)
+                .GroupBy(ms => ms.IdProfissional)
+                .Select(g => new
+                {
+                    IdProfissional = g.Key,
+                    TotalMarcacoes = g.Count()
+                })
+                .OrderByDescending(g => g.TotalMarcacoes)
+                .Take(5)
+                .ToListAsync();
+
+            var profissionaisDTO = new List<ProfissionalMaisRequisitadoDTO>();
+
+            foreach (var profissional in profissionaisMaisRequisitados)
+            {
+                var profissionalInfo = await _context.Profissionais
+                    .Where(p => p.IdProfissional == profissional.IdProfissional)
+                    .Select(p => new ProfissionalMaisRequisitadoDTO
+                    {
+                        IdProfissional = p.IdProfissional,
+                        NomeProfissional = p.NomeCompleto, // Supondo que existe uma propriedade "Nome" na entidade Profissional
+                        TotalMarcacoes = profissional.TotalMarcacoes
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (profissionalInfo != null)
+                {
+                    profissionaisDTO.Add(profissionalInfo);
+                }
+            }
+
+            return profissionaisDTO;
+        }
+        public async Task<ServicoSolicitadoDTO> ObterServicoMaisSolicitado()
+        {
+            var servicoMaisSolicitado = await _context.Marcacoes
+                .Include(m => m.ListaMarcacoes)
+                .SelectMany(m => m.ListaMarcacoes)
+                .GroupBy(ms => ms.IdServico)
+                .OrderByDescending(g => g.Count())
+                .Select(g => new ServicoSolicitadoDTO
+                {
+                    IdServico = g.Key,
+                    NomeServico = g.FirstOrDefault().Servico.TipoDeServico, 
+                    TotalMarcacoes = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            return servicoMaisSolicitado;
+        }
+        public async Task<ServicoSolicitadoDTO> ObterServicoMenosSolicitado()
+        {
+            var servicoMenosSolicitado = await _context.Marcacoes
+                .Include(m => m.ListaMarcacoes)
+                .SelectMany(m => m.ListaMarcacoes)
+                .GroupBy(ms => ms.IdServico)
+                .OrderBy(g => g.Count())
+                .Select(g => new ServicoSolicitadoDTO
+                {
+                    IdServico = g.Key,
+                    NomeServico = g.FirstOrDefault().Servico.TipoDeServico, 
+                    TotalMarcacoes = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            return servicoMenosSolicitado;
+        }
+        public async Task<ValorFaturadoDTO> ObterValorFaturadoDiaCorrente()
+        {
+            var hoje = DateOnly.FromDateTime(DateTime.Today);
+            var valorFaturado = await _context.Marcacoes
+                .Where(m => m.DataDeMarcacao == hoje)
+                .SumAsync(m => m.PrecoDaMarcacao);
+
+            return new ValorFaturadoDTO { Data = hoje, Valor = valorFaturado };
+        }
+        public async Task<ValorFaturadoDTO> ObterValorFaturadoOntem()
+        {
+            var ontem = DateOnly.FromDateTime(DateTime.Today.AddDays(-1));
+            var valorFaturado = await _context.Marcacoes
+                .Where(m => m.DataDeMarcacao == ontem)
+                .SumAsync(m => m.PrecoDaMarcacao);
+
+            return new ValorFaturadoDTO { Data = ontem, Valor = valorFaturado };
+        }
+        public async Task<ValorFaturadoDTO> ObterValorFaturadoMesCorrente()
+        {
+            var inicioMes = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var proximoMes = inicioMes.AddMonths(1);
+            var valorFaturado = await _context.Marcacoes
+                .Where(m => m.DataDeMarcacao >= inicioMes && m.DataDeMarcacao < proximoMes)
+                .SumAsync(m => m.PrecoDaMarcacao);
+
+            return new ValorFaturadoDTO { Data = inicioMes, Valor = valorFaturado };
+        }
+        public async Task<ValorFaturadoDTO> ObterValorFaturadoMesPassado()
+        {
+            var inicioMesPassado = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
+            var inicioMesCorrente = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var valorFaturado = await _context.Marcacoes
+                .Where(m => m.DataDeMarcacao >= inicioMesPassado && m.DataDeMarcacao < inicioMesCorrente)
+                .SumAsync(m => m.PrecoDaMarcacao);
+
+            return new ValorFaturadoDTO { Data = inicioMesPassado, Valor = valorFaturado };
+        }
+        public async Task<List<MarcacaoPorMesDTO>> ListarMarcacoesPorMes()
+        {
+            var marcacoes = await _context.Marcacoes
+                .Include(m => m.ListaMarcacoes)
+                .ThenInclude(ms => ms.Profissional)
+                .Include(m => m.ListaMarcacoes)
+                .ThenInclude(ms => ms.Servico)
+                .Include(m => m.Utilizador)
+                .ToListAsync();
+
+            var marcacoesPorMes = marcacoes
+                .GroupBy(m => new { m.DataDeMarcacao.Year, m.DataDeMarcacao.Month })
+                .Select(g => new MarcacaoPorMesDTO
+                {
+                    MesAno = $"{g.Key.Month:00}/{g.Key.Year}",
+                    Marcacoes = g.SelectMany(m => m.ListaMarcacoes
+                        .Where(ms => ms.Profissional != null && ms.Servico != null && m.Utilizador != null)
+                        .Select(ms => new MarcacaoDetalhadaDTO
+                        {
+                            DataMarcacao = m.DataDeMarcacao,
+                            Profissional = ms.Profissional?.NomeCompleto ?? "N/A",
+                            Cliente = m.Utilizador?.NomeCompleto ?? "N/A",
+                            Servico = ms.Servico?.TipoDeServico ?? "N/A"
+                        })).ToList()
+                })
+                .OrderBy(m => m.MesAno) 
+                .ToList();
+
+            return marcacoesPorMes;
         }
 
     }

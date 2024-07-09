@@ -55,7 +55,7 @@ namespace Karapinha.api.Controllers
             }
             catch (Exception ex)
             {
-                // Logar o erro
+                
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao listar marcações com serviços: " + ex.Message);
             }
         }
@@ -91,6 +91,69 @@ namespace Karapinha.api.Controllers
             return Ok(); 
         }
 
+        [HttpGet("ProfissionaisMaisRequisitados")]
+        public async Task<ActionResult<List<ProfissionalMaisRequisitadoDTO>>> GetProfissionaisMaisRequisitados()
+        {
+            var profissionaisMaisRequisitados = await _marcacaoService.ListarProfissionaisMaisRequisitados();
+            return Ok(profissionaisMaisRequisitados);
+        }
+ 
+        [HttpGet("ServicoMaisSolicitado")]
+        public async Task<ActionResult<ServicoSolicitadoDTO>> GetServicoMaisSolicitado()
+        {
+            var servicoMaisSolicitado = await _marcacaoService.ObterServicoMaisSolicitado();
+            if (servicoMaisSolicitado == null)
+            {
+                return NotFound();
+            }
+            return Ok(servicoMaisSolicitado);
+        }
+
+        [HttpGet("ServicoMenosSolicitado")]
+        public async Task<ActionResult<ServicoSolicitadoDTO>> GetServicoMenosSolicitado()
+        {
+            var servicoMenosSolicitado = await _marcacaoService.ObterServicoMenosSolicitado();
+            if (servicoMenosSolicitado == null)
+            {
+                return NotFound();
+            }
+            return Ok(servicoMenosSolicitado);
+        }
+
+        [HttpGet("ValorFaturadoDiaCorrente")]
+        public async Task<ActionResult<ValorFaturadoDTO>> GetValorFaturadoDiaCorrente()
+        {
+            var resultado = await _marcacaoService.ObterValorFaturadoDiaCorrente();
+            return Ok(resultado);
+        }
+
+        [HttpGet("ValorFaturadoOntem")]
+        public async Task<ActionResult<ValorFaturadoDTO>> GetValorFaturadoOntem()
+        {
+            var resultado = await _marcacaoService.ObterValorFaturadoOntem();
+            return Ok(resultado);
+        }
+
+        [HttpGet("ValorFaturadoMesCorrente")]
+        public async Task<ActionResult<ValorFaturadoDTO>> GetValorFaturadoMesCorrente()
+        {
+            var resultado = await _marcacaoService.ObterValorFaturadoMesCorrente();
+            return Ok(resultado);
+        }
+
+        [HttpGet("ValorFaturadoMesPassado")]
+        public async Task<ActionResult<ValorFaturadoDTO>> GetValorFaturadoMesPassado()
+        {
+            var resultado = await _marcacaoService.ObterValorFaturadoMesPassado();
+            return Ok(resultado);
+        }
+
+        [HttpGet("ListarMarcacoesPorMes")]
+        public async Task<ActionResult<List<MarcacaoPorMesDTO>>> ListarMarcacoesPorMes()
+        {
+            var resultado = await _marcacaoService.ListarMarcacoesPorMes();
+            return Ok(resultado);
+        }
 
     }
 }

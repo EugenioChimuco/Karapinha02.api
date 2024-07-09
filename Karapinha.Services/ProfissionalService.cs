@@ -82,7 +82,6 @@ namespace Karapinha.Services
             }
 
         }
-
         public async Task<List<ProfissionalComHorariosDTO>> ObterProfissionaisComHorarios()
         {
             var profissionais = await _profissionalRepository.Listar();

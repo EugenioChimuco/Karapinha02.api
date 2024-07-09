@@ -19,8 +19,14 @@ namespace Karapinha.Shared.IService
         Task<List<MarcacaoComServicosDTO>> ListarMarcacoesComServicos();
         Task<List<MarcacaoServicoDTO>> ListarPorProfissionalData(int idProfissional, DateOnly data);
         Task<bool> AtualizarDataMarcacao(int idMarcacao, ActualizarDataMarcacaoDTO dto);
-
-
+        Task<List<ProfissionalMaisRequisitadoDTO>> ListarProfissionaisMaisRequisitados();
+        Task<ServicoSolicitadoDTO> ObterServicoMaisSolicitado();
+        Task<ServicoSolicitadoDTO> ObterServicoMenosSolicitado();
+        Task<ValorFaturadoDTO> ObterValorFaturadoDiaCorrente();
+        Task<ValorFaturadoDTO> ObterValorFaturadoOntem();
+        Task<ValorFaturadoDTO> ObterValorFaturadoMesCorrente();
+        Task<ValorFaturadoDTO> ObterValorFaturadoMesPassado();
+        Task<List<MarcacaoPorMesDTO>> ListarMarcacoesPorMes();
 
     }
 }
