@@ -118,8 +118,8 @@ namespace Karapinha.DAL.Migrations
                     b.Property<DateOnly>("DataMarcacao")
                         .HasColumnType("date");
 
-                    b.Property<int>("IdHorario")
-                        .HasColumnType("int");
+                    b.Property<TimeOnly>("Horario")
+                        .HasColumnType("time");
 
                     b.Property<int>("IdProfissional")
                         .HasColumnType("int");
@@ -131,8 +131,6 @@ namespace Karapinha.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdMarcacaoServico");
-
-                    b.HasIndex("IdHorario");
 
                     b.HasIndex("IdProfissional");
 
@@ -277,12 +275,6 @@ namespace Karapinha.DAL.Migrations
 
             modelBuilder.Entity("Karapinha.Model.MarcacaoServico", b =>
                 {
-                    b.HasOne("Karapinha.Model.Horario", "Horario")
-                        .WithMany()
-                        .HasForeignKey("IdHorario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Karapinha.Model.Profissional", "Profissional")
                         .WithMany()
                         .HasForeignKey("IdProfissional")
@@ -298,8 +290,6 @@ namespace Karapinha.DAL.Migrations
                     b.HasOne("Karapinha.Model.Marcacao", null)
                         .WithMany("ListaMarcacoes")
                         .HasForeignKey("MarcacaoIdMarcacao");
-
-                    b.Navigation("Horario");
 
                     b.Navigation("Profissional");
 

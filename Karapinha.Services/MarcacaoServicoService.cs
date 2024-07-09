@@ -25,7 +25,7 @@ namespace Karapinha.Services
                     IdServico = marcacaoServicoDTO.IdServico,
                     IdProfissional = marcacaoServicoDTO.IdProfissional,
                     DataMarcacao = marcacaoServicoDTO.DataMarcacao, 
-                    IdHorario = marcacaoServicoDTO.HoraMarcacao,
+                    Horario = marcacaoServicoDTO.HoraMarcacao,
 
                 };
 

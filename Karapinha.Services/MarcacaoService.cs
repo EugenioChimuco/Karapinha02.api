@@ -2,6 +2,7 @@
 using Karapinha.DAL.Repositories;
 using Karapinha.DTO;
 using Karapinha.Model;
+using Karapinha.Service;
 using Karapinha.Shared.IRepository;
 using Karapinha.Shared.IService;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +17,24 @@ namespace Karapinha.Services
     public class MarcacaoService : IMarcacaoService
     {
         private readonly KarapinhaContext _context;
-        private readonly IMarcacaoServicoRepository _marcacaoServicoRepository;
         private readonly IMarcacaoRepository _marcacaoRepository;
         private readonly IServicoRepository _servicoRepository;
+        private readonly IUtilizadorRepository _utilizadorRepository;
+        private readonly IEmailService _emailService;
 
-        public MarcacaoService(KarapinhaContext context, IMarcacaoRepository marcacaoRepository, IMarcacaoServicoRepository marcacaoServicoRepository, IServicoRepository servicoRepository)
+        public MarcacaoService(
+            KarapinhaContext context,
+            IMarcacaoRepository marcacaoRepository,
+            IUtilizadorRepository utilizadorRepository,
+            IEmailService emailService,
+            IServicoRepository servicoRepository)
         {
             _context = context;
             _marcacaoRepository = marcacaoRepository;
-            _marcacaoServicoRepository = marcacaoServicoRepository;
             _servicoRepository = servicoRepository;
+            _utilizadorRepository = utilizadorRepository;
+            _emailService = emailService;
         }
-
         public async Task<bool> AceitarPedidoDeMarcacao(int id)
         {
             var marcacao = await _marcacaoRepository.MostrarPorId(id);
@@ -35,9 +42,38 @@ namespace Karapinha.Services
             {
                 return false;
             }
+
+            var utilizadorId = marcacao.IdUtilizador;
+            if (utilizadorId == null)
+            {
+                return false;
+            }
+
+            int userId = utilizadorId.Value;
+
+            var utilizador = await _utilizadorRepository.MostrarPorId(userId);
+            if (utilizador == null)
+            {
+                return false;
+            }
+
             marcacao.EstadoDeMarcacao = true;
+            await _emailService.SendEmailAsync(utilizador.Email, "Estado da Marcação", "A sua marcação foi aceite !");
             return await _marcacaoRepository.Atualizar(marcacao);
-        }      
+        }
+        public async Task<bool> AtualizarDataMarcacao(int idMarcacao, ActualizarDataMarcacaoDTO dto)
+        {
+            var marcacao = await _marcacaoRepository.MostrarPorId(idMarcacao);
+            if (marcacao == null)
+            {
+                return false; 
+            }
+
+            marcacao.DataDeMarcacao = dto.NovaData;
+            return  await _marcacaoRepository.Atualizar(marcacao);
+ 
+        }
+
         public async Task<Marcacao> MostrarMarcacaoPorId(int id)
         {
             var marcacao = await _marcacaoRepository.MostrarPorId(id);
@@ -45,24 +81,23 @@ namespace Karapinha.Services
 
             return marcacao;
         }
-
         public async Task<List<Marcacao>> MostrarTodasMarcacoes()
         {
             return await _marcacaoRepository.Listar();
         }
         public async Task<bool> CriarMarcacaoComServicos(MarcacaoDTO marcacaoDTO)
         {
-            // Cria uma nova entidade de Marcacao
+            
             var novaMarcacao = new Marcacao
             {
                 DataDeMarcacao = marcacaoDTO.DataDeMarcacao,
                 PrecoDaMarcacao = marcacaoDTO.PrecoDaMarcacao,
                 IdUtilizador = marcacaoDTO.IdUtilizador,
-                EstadoDeMarcacao = false, // Por padrão, assume como não concluída
+                EstadoDeMarcacao = false, 
                 ListaMarcacoes = new List<MarcacaoServico>()
             };
 
-            // Adiciona os serviços à marcação
+            
             foreach (var marcacaoServicoDTO in marcacaoDTO.ListaMarcacoes)
             {
                 var novoMarcacaoServico = new MarcacaoServico
@@ -70,14 +105,13 @@ namespace Karapinha.Services
                     IdServico = marcacaoServicoDTO.IdServico,
                     IdProfissional = marcacaoServicoDTO.IdProfissional,
                     DataMarcacao = marcacaoServicoDTO.DataMarcacao,
-                    IdHorario = marcacaoServicoDTO.HoraMarcacao
+                    Horario = marcacaoServicoDTO.HoraMarcacao
                 };
 
-                // Adiciona o novo MarcacaoServico à lista de MarcacaoServico da novaMarcacao
+               
                 novaMarcacao.ListaMarcacoes.Add(novoMarcacaoServico);
             }
 
-            // Cria a marcação no banco de dados
             var criadaComSucesso = await _marcacaoRepository.Criar(novaMarcacao);
 
             return criadaComSucesso;
@@ -104,7 +138,7 @@ namespace Karapinha.Services
                         IdServico = ms.IdServico,
                         IdProfissional = ms.IdProfissional,
                         DataMarcacao = ms.DataMarcacao,
-                        HoraMarcacao = ms.IdHorario
+                        HoraMarcacao = ms.Horario
                     }).ToList()
                 };
 
@@ -113,8 +147,27 @@ namespace Karapinha.Services
 
             return marcacoesComServicosDTO;
         }
+        public async Task<List<MarcacaoServicoDTO>> ListarPorProfissionalData(int idProfissional, DateOnly data)
+        {
+            var marcacoes = await _context.Marcacoes
+                .Include(m => m.ListaMarcacoes)
+                .Where(m => m.ListaMarcacoes.Any(ms => ms.IdProfissional == idProfissional && ms.DataMarcacao == data))
+                .ToListAsync();
 
+            var marcacoesDTO = marcacoes.SelectMany(m => m.ListaMarcacoes
+                .Where(ms => ms.IdProfissional == idProfissional && ms.DataMarcacao == data)
+                .Select(ms => new MarcacaoServicoDTO
+                {
+                    IdMarcacaoServico = ms.IdMarcacaoServico,
+                    IdServico = ms.IdServico,
+                    IdProfissional = ms.IdProfissional,
+                    DataMarcacao = ms.DataMarcacao,
+                    HoraMarcacao = ms.Horario
+                })
+            ).ToList();
 
+            return marcacoesDTO;
+        }
 
     }
 }

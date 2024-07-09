@@ -60,6 +60,37 @@ namespace Karapinha.api.Controllers
             }
         }
 
+        [HttpGet("ListarPorProfissionalData/{idProfissional}/{data}")]
+        public async Task<ActionResult<List<MarcacaoServicoDTO>>> ListarPorProfissionalData(int idProfissional, DateOnly data)
+        {
+            try
+            {
+                var marcacoes = await _marcacaoService.ListarPorProfissionalData(idProfissional, data);
+                if (marcacoes == null || !marcacoes.Any())
+                {
+                    return NotFound("Não foram encontradas marcações para o profissional e data fornecidos.");
+                }
+
+                return Ok(marcacoes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
+
+        [HttpPut("atualizar-data/{idMarcacao}")]
+        public async Task<IActionResult> AtualizarDataMarcacao(int idMarcacao, [FromBody] ActualizarDataMarcacaoDTO dto)
+        {
+            var atualizadaComSucesso = await _marcacaoService.AtualizarDataMarcacao(idMarcacao, dto);
+
+            if (!atualizadaComSucesso)
+            {
+                return NotFound();
+            }
+            return Ok(); 
+        }
+
 
     }
 }

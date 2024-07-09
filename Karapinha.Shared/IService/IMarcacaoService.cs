@@ -17,6 +17,8 @@ namespace Karapinha.Shared.IService
         Task<bool> AceitarPedidoDeMarcacao(int id);
         Task<bool> CriarMarcacaoComServicos(MarcacaoDTO marcacaoDTO);
         Task<List<MarcacaoComServicosDTO>> ListarMarcacoesComServicos();
+        Task<List<MarcacaoServicoDTO>> ListarPorProfissionalData(int idProfissional, DateOnly data);
+        Task<bool> AtualizarDataMarcacao(int idMarcacao, ActualizarDataMarcacaoDTO dto);
 
 
 

@@ -19,8 +19,6 @@ namespace Karapinha.Model
         [ForeignKey(nameof(IdProfissional))]
         public Profissional Profissional { get; set; }
         public DateOnly DataMarcacao { get; set; }
-        public int IdHorario { get; set; }
-        [ForeignKey(nameof(IdHorario))]
-        public Horario Horario { get; set; }
+        public TimeOnly Horario { get; set; }
     }
 }

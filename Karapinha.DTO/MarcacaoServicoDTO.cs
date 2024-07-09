@@ -13,7 +13,7 @@ namespace Karapinha.DTO
         public int IdServico { get; set; }
         public int IdProfissional { get; set; }
         public DateOnly DataMarcacao { get; set; }
-        public int HoraMarcacao { get; set; }
+        public TimeOnly HoraMarcacao { get; set; }
     }
 
 }
