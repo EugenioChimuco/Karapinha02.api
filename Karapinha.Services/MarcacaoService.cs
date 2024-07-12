@@ -194,7 +194,7 @@ namespace Karapinha.Services
                     .Select(p => new ProfissionalMaisRequisitadoDTO
                     {
                         IdProfissional = p.IdProfissional,
-                        NomeProfissional = p.NomeCompleto, // Supondo que existe uma propriedade "Nome" na entidade Profissional
+                        NomeProfissional = p.NomeCompleto, 
                         TotalMarcacoes = profissional.TotalMarcacoes
                     })
                     .FirstOrDefaultAsync();
@@ -299,6 +299,7 @@ namespace Karapinha.Services
                         .Select(ms => new MarcacaoDetalhadaDTO
                         {
                             DataMarcacao = m.DataDeMarcacao,
+                            HoraMarcacao = ms.Horario,
                             Profissional = ms.Profissional?.NomeCompleto ?? "N/A",
                             Cliente = m.Utilizador?.NomeCompleto ?? "N/A",
                             Servico = ms.Servico?.TipoDeServico ?? "N/A"
